@@ -39,6 +39,8 @@ class Tree(Plant):
     """Дерево. Уникальный параметр — возраст"""
 
     def __init__(self, name: str, age: int) -> None:
+        if age < 0:
+            raise ValueError("Возраст не может быть отрицательным")
         super().__init__(name)
         self.age = age
 
@@ -75,6 +77,8 @@ class Cactus(Plant):
     """Кактус. Уникальный параметр — длина колючек"""
 
     def __init__(self, name: str, spine_length: float) -> None:
+        if spine_length < 0:
+            raise ValueError("Длина колючек не может быть отрицательной")
         super().__init__(name)
         self.spine_length = spine_length
 
@@ -149,10 +153,6 @@ def process_add(parts: list[str], container: PlantContainer) -> None:
             )
 
         age = int(parts[3])
-
-        if age < 0:
-            raise ValueError("Возраст не может быть отрицательным")
-
         plant = Tree(name, age)
 
     elif plant_type == "SHRUB":
@@ -171,12 +171,6 @@ def process_add(parts: list[str], container: PlantContainer) -> None:
             )
 
         spine_length = float(parts[3])
-
-        if spine_length < 0:
-            raise ValueError(
-                "Длина колючек не может быть отрицательной"
-            )
-
         plant = Cactus(name, spine_length)
 
     else:
