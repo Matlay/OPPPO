@@ -20,34 +20,32 @@ class FloweringMonth(Enum):
 class Plant(ABC):
     """Абстрактный базовый класс растения"""
 
-    def __init__(self, name):
+    def __init__(self, name: str) -> None:
         self.name = name
 
     @abstractmethod
-    def get_type(self):
+    def get_type(self) -> str:
         """Возвращает тип растения"""
-        pass
 
     @abstractmethod
-    def get_info(self):
+    def get_info(self) -> str:
         """Возвращает строковое описание растения"""
-        pass
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.get_info()
 
 
 class Tree(Plant):
     """Дерево. Уникальный параметр — возраст"""
 
-    def __init__(self, name, age):
+    def __init__(self, name: str, age: int) -> None:
         super().__init__(name)
         self.age = age
 
-    def get_type(self):
+    def get_type(self) -> str:
         return "Дерево"
 
-    def get_info(self):
+    def get_info(self) -> str:
         return (
             f"Тип: {self.get_type()}, "
             f"Название: {self.name}, "
@@ -58,14 +56,14 @@ class Tree(Plant):
 class Shrub(Plant):
     """Кустарник. Уникальный параметр — месяц цветения"""
 
-    def __init__(self, name, flowering_month):
+    def __init__(self, name: str, flowering_month: FloweringMonth) -> None:
         super().__init__(name)
         self.flowering_month = flowering_month
 
-    def get_type(self):
+    def get_type(self) -> str:
         return "Кустарник"
 
-    def get_info(self):
+    def get_info(self) -> str:
         return (
             f"Тип: {self.get_type()}, "
             f"Название: {self.name}, "
@@ -76,14 +74,14 @@ class Shrub(Plant):
 class Cactus(Plant):
     """Кактус. Уникальный параметр — длина колючек"""
 
-    def __init__(self, name, spine_length):
+    def __init__(self, name: str, spine_length: float) -> None:
         super().__init__(name)
         self.spine_length = spine_length
 
-    def get_type(self):
+    def get_type(self) -> str:
         return "Кактус"
 
-    def get_info(self):
+    def get_info(self) -> str:
         return (
             f"Тип: {self.get_type()}, "
             f"Название: {self.name}, "
@@ -94,13 +92,13 @@ class Cactus(Plant):
 class PlantContainer:
     """Контейнер для хранения растений"""
 
-    def __init__(self):
-        self.plants = []
+    def __init__(self) -> None:
+        self.plants: list[Plant] = []
 
-    def add(self, plant):
+    def add(self, plant: Plant) -> None:
         self.plants.append(plant)
 
-    def remove_by_name(self, name):
+    def remove_by_name(self, name: str) -> int:
         """Удаляет все растения с указанным названием"""
         old_size = len(self.plants)
 
@@ -112,7 +110,7 @@ class PlantContainer:
 
         return old_size - len(self.plants)
 
-    def print_all(self):
+    def print_all(self) -> None:
         """Выводит все растения"""
         if not self.plants:
             print("Контейнер пуст")
@@ -122,19 +120,19 @@ class PlantContainer:
             print(f"{number}. {plant}")
 
 
-def parse_month(value):
+def parse_month(value: str) -> FloweringMonth:
     """Преобразует строку в месяц цветения"""
     value = value.upper()
 
     try:
         return FloweringMonth(value)
-    except ValueError:
+    except ValueError as exc:
         raise ValueError(
             f"Неизвестный месяц цветения: {value}"
-        )
+        ) from exc
 
 
-def process_add(parts, container):
+def process_add(parts: list[str], container: PlantContainer) -> None:
     """Обработка команды ADD"""
 
     if len(parts) < 3:
@@ -142,6 +140,7 @@ def process_add(parts, container):
 
     plant_type = parts[1].upper()
     name = parts[2]
+    plant: Plant
 
     if plant_type == "TREE":
         if len(parts) != 4:
@@ -189,7 +188,7 @@ def process_add(parts, container):
     print(f"Добавлено: {plant}")
 
 
-def process_rem(parts, container):
+def process_rem(parts: list[str], container: PlantContainer) -> None:
     """Обработка команды REM"""
 
     if len(parts) != 3:
@@ -211,7 +210,7 @@ def process_rem(parts, container):
         )
 
 
-def process_command(line, container):
+def process_command(line: str, container: PlantContainer) -> None:
     """Распознаёт и выполняет одну команду"""
 
     line = line.strip()
@@ -237,7 +236,7 @@ def process_command(line, container):
         )
 
 
-def process_file(filename):
+def process_file(filename: str) -> PlantContainer:
     """Читает файл построчно и выполняет команды"""
 
     container = PlantContainer()
@@ -259,7 +258,7 @@ def process_file(filename):
     return container
 
 
-def main():
+def main() -> None:
     filename = "input.txt"
 
     process_file(filename)
