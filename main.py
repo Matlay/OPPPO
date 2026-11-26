@@ -134,6 +134,33 @@ def parse_month(value: str) -> FloweringMonth:
         ) from exc
 
 
+def ensure_arg_count(parts: list[str], expected_len: int, usage: str) -> None:
+    """Проверяет точное количество аргументов команды"""
+    if len(parts) != expected_len:
+        raise ValueError(f"Формат: {usage}")
+
+
+def create_tree(parts: list[str], name: str) -> Tree:
+    """Создаёт объект дерева из аргументов команды"""
+    ensure_arg_count(parts, 4, "ADD TREE <название> <возраст>")
+    age = int(parts[3])
+    return Tree(name, age)
+
+
+def create_shrub(parts: list[str], name: str) -> Shrub:
+    """Создаёт объект кустарника из аргументов команды"""
+    ensure_arg_count(parts, 4, "ADD SHRUB <название> <месяц>")
+    month = parse_month(parts[3])
+    return Shrub(name, month)
+
+
+def create_cactus(parts: list[str], name: str) -> Cactus:
+    """Создаёт объект кактуса из аргументов команды"""
+    ensure_arg_count(parts, 4, "ADD CACTUS <название> <длина_колючек>")
+    spine_length = float(parts[3])
+    return Cactus(name, spine_length)
+
+
 def process_add(parts: list[str], container: PlantContainer) -> None:
     """Обработка команды ADD"""
 
@@ -145,32 +172,11 @@ def process_add(parts: list[str], container: PlantContainer) -> None:
     plant: Plant
 
     if plant_type == "TREE":
-        if len(parts) != 4:
-            raise ValueError(
-                "Формат: ADD TREE <название> <возраст>"
-            )
-
-        age = int(parts[3])
-        plant = Tree(name, age)
-
+        plant = create_tree(parts, name)
     elif plant_type == "SHRUB":
-        if len(parts) != 4:
-            raise ValueError(
-                "Формат: ADD SHRUB <название> <месяц>"
-            )
-
-        month = parse_month(parts[3])
-        plant = Shrub(name, month)
-
+        plant = create_shrub(parts, name)
     elif plant_type == "CACTUS":
-        if len(parts) != 4:
-            raise ValueError(
-                "Формат: ADD CACTUS <название> <длина_колючек>"
-            )
-
-        spine_length = float(parts[3])
-        plant = Cactus(name, spine_length)
-
+        plant = create_cactus(parts, name)
     else:
         raise ValueError(
             f"Неизвестный тип растения: {plant_type}"
