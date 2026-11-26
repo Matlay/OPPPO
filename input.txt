@@ -1,0 +1,51 @@
+PRINT
+
+ADD TREE Дуб_обыкновенный 45
+ADD TREE Берёза_повислая 12
+ADD SHRUB Сирень_обыкновенная MAY
+ADD SHRUB Гортензия_метельчатая JULY
+ADD CACTUS Эхинопсис 3.5
+ADD CACTUS Опунция 1.2
+
+PRINT
+
+ADD TREE Сосна_лесная 80
+ADD SHRUB Шиповник_майский JUNE
+ADD CACTUS Маммиллярия 0.8
+ADD TREE Дуб_обыкновенный 15
+ADD SHRUB Спирея_японская AUGUST
+
+REM NAME Дуб_обыкновенный
+
+PRINT
+
+ADD TREE Клён_остролистный 25
+ADD CACTUS Астрофитум 2.0
+ADD SHRUB Жасмин_садовый JUNE
+ADD TREE Ель_европейская 60
+ADD SHRUB Барбарис_тунберга SEPTEMBER
+ADD CACTUS Цереус 5.4
+
+REM NAME Несуществующее_растение
+
+PRINT
+
+ADD TREE Липа_мелколистная 35
+ADD SHRUB Калина_обыкновенная MAY
+ADD CACTUS Ребуция 0.5
+ADD TREE Ясень_высокий 50
+ADD SHRUB Чубушник 6
+
+ADD TREE Ошибка_возраста -10
+ADD CACTUS Ошибка_колючек -2.5
+ADD SHRUB Ошибка_месяца UNKNOWN_MONTH
+ADD TREE Неполная_команда
+ADD UNKNOWN_CMD Параметр
+REM INVALID_COND Тест
+
+PRINT
+
+REM NAME Сирень_обыкновенная
+REM NAME Эхинопсис
+
+PRINT

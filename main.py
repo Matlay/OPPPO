@@ -1,0 +1,269 @@
+from abc import ABC, abstractmethod
+from enum import Enum
+
+
+class FloweringMonth(Enum):
+    JANUARY = "JANUARY"
+    FEBRUARY = "FEBRUARY"
+    MARCH = "MARCH"
+    APRIL = "APRIL"
+    MAY = "MAY"
+    JUNE = "JUNE"
+    JULY = "JULY"
+    AUGUST = "AUGUST"
+    SEPTEMBER = "SEPTEMBER"
+    OCTOBER = "OCTOBER"
+    NOVEMBER = "NOVEMBER"
+    DECEMBER = "DECEMBER"
+
+
+class Plant(ABC):
+    """Абстрактный базовый класс растения."""
+
+    def __init__(self, name):
+        self.name = name
+
+    @abstractmethod
+    def get_type(self):
+        """Возвращает тип растения."""
+        pass
+
+    @abstractmethod
+    def get_info(self):
+        """Возвращает строковое описание растения."""
+        pass
+
+    def __str__(self):
+        return self.get_info()
+
+
+class Tree(Plant):
+    """Дерево. Уникальный параметр — возраст."""
+
+    def __init__(self, name, age):
+        super().__init__(name)
+        self.age = age
+
+    def get_type(self):
+        return "Дерево"
+
+    def get_info(self):
+        return (
+            f"Тип: {self.get_type()}, "
+            f"Название: {self.name}, "
+            f"Возраст: {self.age}"
+        )
+
+
+class Shrub(Plant):
+    """Кустарник. Уникальный параметр — месяц цветения."""
+
+    def __init__(self, name, flowering_month):
+        super().__init__(name)
+        self.flowering_month = flowering_month
+
+    def get_type(self):
+        return "Кустарник"
+
+    def get_info(self):
+        return (
+            f"Тип: {self.get_type()}, "
+            f"Название: {self.name}, "
+            f"Месяц цветения: {self.flowering_month.value}"
+        )
+
+
+class Cactus(Plant):
+    """Кактус. Уникальный параметр — длина колючек."""
+
+    def __init__(self, name, spine_length):
+        super().__init__(name)
+        self.spine_length = spine_length
+
+    def get_type(self):
+        return "Кактус"
+
+    def get_info(self):
+        return (
+            f"Тип: {self.get_type()}, "
+            f"Название: {self.name}, "
+            f"Длина колючек: {self.spine_length}"
+        )
+
+
+class PlantContainer:
+    """Контейнер для хранения растений."""
+
+    def __init__(self):
+        self.plants = []
+
+    def add(self, plant):
+        self.plants.append(plant)
+
+    def remove_by_name(self, name):
+        """Удаляет все растения с указанным названием."""
+        old_size = len(self.plants)
+
+        self.plants = [
+            plant
+            for plant in self.plants
+            if plant.name != name
+        ]
+
+        return old_size - len(self.plants)
+
+    def print_all(self):
+        """Выводит все растения."""
+        if not self.plants:
+            print("Контейнер пуст.")
+            return
+
+        for number, plant in enumerate(self.plants, start=1):
+            print(f"{number}. {plant}")
+
+
+def parse_month(value):
+    """Преобразует строку в месяц цветения."""
+    value = value.upper()
+
+    try:
+        return FloweringMonth(value)
+    except ValueError:
+        raise ValueError(
+            f"Неизвестный месяц цветения: {value}"
+        )
+
+
+def process_add(parts, container):
+    """Обработка команды ADD."""
+
+    if len(parts) < 3:
+        raise ValueError("Неверный формат команды ADD.")
+
+    plant_type = parts[1].upper()
+    name = parts[2]
+
+    if plant_type == "TREE":
+        if len(parts) != 4:
+            raise ValueError(
+                "Формат: ADD TREE <название> <возраст>"
+            )
+
+        age = int(parts[3])
+
+        if age < 0:
+            raise ValueError("Возраст не может быть отрицательным.")
+
+        plant = Tree(name, age)
+
+    elif plant_type == "SHRUB":
+        if len(parts) != 4:
+            raise ValueError(
+                "Формат: ADD SHRUB <название> <месяц>"
+            )
+
+        month = parse_month(parts[3])
+        plant = Shrub(name, month)
+
+    elif plant_type == "CACTUS":
+        if len(parts) != 4:
+            raise ValueError(
+                "Формат: ADD CACTUS <название> <длина_колючек>"
+            )
+
+        spine_length = float(parts[3])
+
+        if spine_length < 0:
+            raise ValueError(
+                "Длина колючек не может быть отрицательной."
+            )
+
+        plant = Cactus(name, spine_length)
+
+    else:
+        raise ValueError(
+            f"Неизвестный тип растения: {plant_type}"
+        )
+
+    container.add(plant)
+    print(f"Добавлено: {plant}")
+
+
+def process_rem(parts, container):
+    """Обработка команды REM."""
+
+    if len(parts) != 3:
+        raise ValueError(
+            "Формат: REM NAME <название>"
+        )
+
+    condition_type = parts[1].upper()
+    value = parts[2]
+
+    if condition_type == "NAME":
+        removed = container.remove_by_name(value)
+
+        print(f"Удалено объектов: {removed}")
+
+    else:
+        raise ValueError(
+            f"Неизвестное условие удаления: {condition_type}"
+        )
+
+
+def process_command(line, container):
+    """Распознаёт и выполняет одну команду."""
+
+    line = line.strip()
+
+    if not line:
+        return
+
+    parts = line.split()
+    command = parts[0].upper()
+
+    if command == "ADD":
+        process_add(parts, container)
+
+    elif command == "REM":
+        process_rem(parts, container)
+
+    elif command == "PRINT":
+        container.print_all()
+
+    else:
+        raise ValueError(
+            f"Неизвестная команда: {command}"
+        )
+
+
+def process_file(filename):
+    """Читает файл построчно и выполняет команды."""
+
+    container = PlantContainer()
+
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            for line_number, line in enumerate(file, start=1):
+                try:
+                    process_command(line, container)
+
+                except (ValueError, IndexError) as error:
+                    print(
+                        f"Ошибка в строке {line_number}: {error}"
+                    )
+
+    except FileNotFoundError:
+        print(f"Файл не найден: {filename}")
+
+    return container
+
+
+def main():
+    filename = "input.txt"
+
+    process_file(filename)
+
+
+if __name__ == "__main__":
+    main()
