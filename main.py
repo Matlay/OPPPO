@@ -23,6 +23,10 @@ class Plant(ABC):
     def __init__(self, name: str) -> None:
         self.name = name
 
+    def get_base_info(self) -> str:
+        """Возвращает общую часть описания растения"""
+        return f"Тип: {self.get_type()}, Название: {self.name}"
+
     @abstractmethod
     def get_type(self) -> str:
         """Возвращает тип растения"""
@@ -48,11 +52,7 @@ class Tree(Plant):
         return "Дерево"
 
     def get_info(self) -> str:
-        return (
-            f"Тип: {self.get_type()}, "
-            f"Название: {self.name}, "
-            f"Возраст: {self.age}"
-        )
+        return f"{self.get_base_info()}, Возраст: {self.age}"
 
 
 class Shrub(Plant):
@@ -67,8 +67,7 @@ class Shrub(Plant):
 
     def get_info(self) -> str:
         return (
-            f"Тип: {self.get_type()}, "
-            f"Название: {self.name}, "
+            f"{self.get_base_info()}, "
             f"Месяц цветения: {self.flowering_month.value}"
         )
 
@@ -87,8 +86,7 @@ class Cactus(Plant):
 
     def get_info(self) -> str:
         return (
-            f"Тип: {self.get_type()}, "
-            f"Название: {self.name}, "
+            f"{self.get_base_info()}, "
             f"Длина колючек: {self.spine_length}"
         )
 
