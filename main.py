@@ -18,19 +18,19 @@ class FloweringMonth(Enum):
 
 
 class Plant(ABC):
-    """Абстрактный базовый класс растения."""
+    """Абстрактный базовый класс растения"""
 
     def __init__(self, name):
         self.name = name
 
     @abstractmethod
     def get_type(self):
-        """Возвращает тип растения."""
+        """Возвращает тип растения"""
         pass
 
     @abstractmethod
     def get_info(self):
-        """Возвращает строковое описание растения."""
+        """Возвращает строковое описание растения"""
         pass
 
     def __str__(self):
@@ -38,7 +38,7 @@ class Plant(ABC):
 
 
 class Tree(Plant):
-    """Дерево. Уникальный параметр — возраст."""
+    """Дерево. Уникальный параметр — возраст"""
 
     def __init__(self, name, age):
         super().__init__(name)
@@ -56,7 +56,7 @@ class Tree(Plant):
 
 
 class Shrub(Plant):
-    """Кустарник. Уникальный параметр — месяц цветения."""
+    """Кустарник. Уникальный параметр — месяц цветения"""
 
     def __init__(self, name, flowering_month):
         super().__init__(name)
@@ -74,7 +74,7 @@ class Shrub(Plant):
 
 
 class Cactus(Plant):
-    """Кактус. Уникальный параметр — длина колючек."""
+    """Кактус. Уникальный параметр — длина колючек"""
 
     def __init__(self, name, spine_length):
         super().__init__(name)
@@ -92,7 +92,7 @@ class Cactus(Plant):
 
 
 class PlantContainer:
-    """Контейнер для хранения растений."""
+    """Контейнер для хранения растений"""
 
     def __init__(self):
         self.plants = []
@@ -101,7 +101,7 @@ class PlantContainer:
         self.plants.append(plant)
 
     def remove_by_name(self, name):
-        """Удаляет все растения с указанным названием."""
+        """Удаляет все растения с указанным названием"""
         old_size = len(self.plants)
 
         self.plants = [
@@ -113,9 +113,9 @@ class PlantContainer:
         return old_size - len(self.plants)
 
     def print_all(self):
-        """Выводит все растения."""
+        """Выводит все растения"""
         if not self.plants:
-            print("Контейнер пуст.")
+            print("Контейнер пуст")
             return
 
         for number, plant in enumerate(self.plants, start=1):
@@ -123,7 +123,7 @@ class PlantContainer:
 
 
 def parse_month(value):
-    """Преобразует строку в месяц цветения."""
+    """Преобразует строку в месяц цветения"""
     value = value.upper()
 
     try:
@@ -135,10 +135,10 @@ def parse_month(value):
 
 
 def process_add(parts, container):
-    """Обработка команды ADD."""
+    """Обработка команды ADD"""
 
     if len(parts) < 3:
-        raise ValueError("Неверный формат команды ADD.")
+        raise ValueError("Неверный формат команды ADD")
 
     plant_type = parts[1].upper()
     name = parts[2]
@@ -152,7 +152,7 @@ def process_add(parts, container):
         age = int(parts[3])
 
         if age < 0:
-            raise ValueError("Возраст не может быть отрицательным.")
+            raise ValueError("Возраст не может быть отрицательным")
 
         plant = Tree(name, age)
 
@@ -175,7 +175,7 @@ def process_add(parts, container):
 
         if spine_length < 0:
             raise ValueError(
-                "Длина колючек не может быть отрицательной."
+                "Длина колючек не может быть отрицательной"
             )
 
         plant = Cactus(name, spine_length)
@@ -190,7 +190,7 @@ def process_add(parts, container):
 
 
 def process_rem(parts, container):
-    """Обработка команды REM."""
+    """Обработка команды REM"""
 
     if len(parts) != 3:
         raise ValueError(
@@ -212,7 +212,7 @@ def process_rem(parts, container):
 
 
 def process_command(line, container):
-    """Распознаёт и выполняет одну команду."""
+    """Распознаёт и выполняет одну команду"""
 
     line = line.strip()
 
@@ -238,7 +238,7 @@ def process_command(line, container):
 
 
 def process_file(filename):
-    """Читает файл построчно и выполняет команды."""
+    """Читает файл построчно и выполняет команды"""
 
     container = PlantContainer()
 
